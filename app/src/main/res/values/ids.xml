@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="customerDetailsLabel" type="id" />
+    <item name="customerNameEditText" type="id" />
+    <item name="emailEditText" type="id" />
+    <item name="mobileEditText" type="id" />
+    <item name="cityEditText" type="id" />
+    <item name="purchaseOrderDetailsLabel" type="id" />
+    <item name="productNameEditText" type="id" />
+    <item name="quantityEditText" type="id" />
+    <item name="pricingEditText" type="id" />
+    <item name="mrpEditText" type="id" />
+    <item name="shippingDetailsLabel" type="id" />
+    <item name="addressEditText" type="id" />
+    <item name="cityShippingEditText" type="id" />
+    <item name="pincodeEditText" type="id" />
+    <item name="submitButton" type="id" />
+</resources>
