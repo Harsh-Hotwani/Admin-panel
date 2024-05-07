@@ -45,22 +45,30 @@ public class AddCustomer extends AppCompatActivity {
                 String email = emailEditText.getText().toString().trim();
                 String mobile = mobileEditText.getText().toString().trim();
                 String city = cityEditText.getText().toString().trim();
+                String productName = productNameEditText.getText().toString().trim();
+                int quantity = Integer.parseInt(quantityEditText.getText().toString().trim());
+                double pricing = Double.parseDouble(pricingEditText.getText().toString().trim());
+                double mrp = Double.parseDouble(mrpEditText.getText().toString().trim());
 
+                if (!customerName.isEmpty() && !email.isEmpty() && !mobile.isEmpty() && !city.isEmpty()
+                        && !productName.isEmpty()) {
 
-                if (!customerName.isEmpty() && !email.isEmpty() && !mobile.isEmpty() && !city.isEmpty()) {
-
-                    // Create a CustomerDetailsModel object
-                    CustomerDetailsModel customer = new CustomerDetailsModel(0, customerName, email, mobile, city);
                     // Insert customer details into the database
-                    boolean inserted = dbHelper.insertCustomerDetails(customer);
+                    CustomerDetailsModel customer = new CustomerDetailsModel(0, customerName, email, mobile, city);
+                    long customerId = dbHelper.insertCustomerDetails(customer);
 
-                    if (inserted) {
-                        Toast.makeText(AddCustomer.this, "Customer details added successfully", Toast.LENGTH_SHORT).show();
-                        // Clear input fields after successful addition
-                        customerNameEditText.getText().clear();
-                        emailEditText.getText().clear();
-                        mobileEditText.getText().clear();
-                        cityEditText.getText().clear();
+                    if (customerId != -1) {
+                        // Insert product details into the database
+                        ProductDetailsModel product = new ProductDetailsModel(0, productName, quantity, pricing, mrp, customerId);
+                        boolean inserted = dbHelper.insertProductDetails(product);
+
+                        if (inserted) {
+                            Toast.makeText(AddCustomer.this, "Customer and product details added successfully", Toast.LENGTH_SHORT).show();
+                            // Clear input fields after successful addition
+                            clearInputFields();
+                        } else {
+                            Toast.makeText(AddCustomer.this, "Failed to add product details", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(AddCustomer.this, "Failed to add customer details", Toast.LENGTH_SHORT).show();
                     }
@@ -68,10 +76,17 @@ public class AddCustomer extends AppCompatActivity {
                     Toast.makeText(AddCustomer.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 }
             }
-
-
-
-
         });
+    }
+
+    private void clearInputFields() {
+        customerNameEditText.getText().clear();
+        emailEditText.getText().clear();
+        mobileEditText.getText().clear();
+        cityEditText.getText().clear();
+        productNameEditText.getText().clear();
+        quantityEditText.getText().clear();
+        pricingEditText.getText().clear();
+        mrpEditText.getText().clear();
     }
 }

@@ -107,8 +107,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Insert customer details
-    public boolean insertCustomerDetails(CustomerDetailsModel customer) {
+    public long insertCustomerDetails(CustomerDetailsModel customer) {
         SQLiteDatabase db = this.getWritableDatabase();
+        long insertedId = -1; // Initialize insertedId to -1
 
         try {
             ContentValues values = new ContentValues();
@@ -118,36 +119,39 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(KEY_CITY, customer.getCity());
 
             // insert row
-            long result = db.insert(TABLE_CUSTOMER_DETAILS, null, values);
-            return result != -1;
+            insertedId = db.insert(TABLE_CUSTOMER_DETAILS, null, values);
         } catch (Exception e) {
             // Log any exceptions that occur
             Log.e("DBHelper", "Error inserting customer details: " + e.getMessage());
-            return false;
         } finally {
             // close db connection
             db.close();
         }
+
+        return insertedId; // Return the inserted row ID
     }
 
     // Insert product details method
     public boolean insertProductDetails(ProductDetailsModel product) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_PRODUCT_NAME, product.getProductName());
-        values.put(KEY_QUANTITY, product.getQuantity());
-        values.put(KEY_PRICING, product.getPricing());
-        values.put(KEY_MRP, product.getMrp());
-        values.put(KEY_CUSTOMER_ID_FOREIGN, product.getCustomerId()); // Set the customer ID
+        try {
+            ContentValues values = new ContentValues();
+            values.put(KEY_PRODUCT_NAME, product.getProductName());
+            values.put(KEY_QUANTITY, product.getQuantity());
+            values.put(KEY_PRICING, product.getPricing());
+            values.put(KEY_MRP, product.getMrp());
+            values.put(KEY_CUSTOMER_ID_FOREIGN, product.getCustomerId());
 
-        // Insert row
-        long result = db.insert(TABLE_PRODUCT_DETAILS, null, values);
-
-        // Close db connection
-        db.close();
-
-        return result != -1;
+            // Insert row
+            long result = db.insert(TABLE_PRODUCT_DETAILS, null, values);
+            return result != -1;
+        } catch (Exception e) {
+            Log.e("DBHelper", "Error inserting product details: " + e.getMessage());
+            return false;
+        } finally {
+            db.close();
+        }
     }
 
 
