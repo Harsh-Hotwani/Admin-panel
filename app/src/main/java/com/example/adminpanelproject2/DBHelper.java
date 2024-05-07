@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 import com.example.adminpanelproject2.model.CustomerDetailsModel;
 import com.example.adminpanelproject2.model.ProductDetailsModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DBHelper extends SQLiteOpenHelper {
     public static final String dbName = "Admin.db";
 
@@ -152,6 +155,30 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             db.close();
         }
+    }
+
+    public List<CustomerDetailsModel> getAllCustomers() {
+        List<CustomerDetailsModel> customerList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CUSTOMER_DETAILS, null);
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(KEY_ID));
+                String customerName = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CUSTOMER_NAME));
+                String email = cursor.getString(cursor.getColumnIndexOrThrow(KEY_EMAIL));
+                String mobileNumber = cursor.getString(cursor.getColumnIndexOrThrow(KEY_MOBILE_NUMBER));
+                String city = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CITY));
+
+                CustomerDetailsModel customer = new CustomerDetailsModel(id, customerName, email, mobileNumber, city);
+                customerList.add(customer);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return customerList;
     }
 
 

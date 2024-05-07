@@ -1,14 +1,19 @@
 package com.example.adminpanelproject2;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.adminpanelproject2.Adapter.CustomerAdapter;
 import com.example.adminpanelproject2.model.CustomerDetailsModel;
 import com.example.adminpanelproject2.model.ProductDetailsModel;
+
+import java.util.List;
 
 public class AddCustomer extends AppCompatActivity {
     EditText customerNameEditText, emailEditText, mobileEditText, cityEditText;
@@ -16,6 +21,7 @@ public class AddCustomer extends AppCompatActivity {
     EditText addressEditText, cityShippingEditText, pincodeEditText;
     Button submitButton;
     DBHelper dbHelper;
+    CustomerAdapter adapter;
 
 
     @Override
@@ -64,6 +70,13 @@ public class AddCustomer extends AppCompatActivity {
 
                         if (inserted) {
                             Toast.makeText(AddCustomer.this, "Customer and product details added successfully", Toast.LENGTH_SHORT).show();
+                            List<CustomerDetailsModel> customerList = dbHelper.getAllCustomers(); // Implement this method in your DBHelper class to fetch all customers
+                            // Update the RecyclerView adapter with the new data
+                            adapter.updateData(customerList);
+                            // Notify the adapter that the dataset has changed
+                            adapter.notifyDataSetChanged();
+                            Intent intent = new Intent(AddCustomer.this,MainActivity.class);
+                            finish();
                             // Clear input fields after successful addition
                             clearInputFields();
                         } else {
